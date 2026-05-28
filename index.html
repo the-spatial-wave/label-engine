@@ -700,10 +700,184 @@
             .a4-page:last-child {
                 page-break-after: avoid !important;
             }
+
+            .mobile-nav {
+                display: none !important;
+            }
+        }
+
+        /* ==========================================================================
+           MOBILE — Tab Modifica / Anteprima (≤768px)
+           ========================================================================== */
+        .mobile-nav {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-nav {
+                display: flex;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 100;
+                background: var(--bg-secondary);
+                border-bottom: 1px solid rgba(200, 159, 109, 0.15);
+                box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+            }
+
+            .mobile-tab {
+                flex: 1;
+                padding: 14px 0;
+                text-align: center;
+                font-family: 'Outfit', sans-serif;
+                font-size: 0.82rem;
+                font-weight: 500;
+                letter-spacing: 0.06em;
+                color: var(--text-muted);
+                background: none;
+                border: none;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                position: relative;
+            }
+
+            .mobile-tab.active {
+                color: var(--hotel-gold);
+                font-weight: 600;
+            }
+
+            .mobile-tab.active::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 20%;
+                right: 20%;
+                height: 2px;
+                background: var(--hotel-gold);
+                border-radius: 2px;
+            }
+
+            .mobile-tab svg {
+                width: 16px;
+                height: 16px;
+                vertical-align: -3px;
+                margin-right: 5px;
+                stroke: currentColor;
+                fill: none;
+                stroke-width: 2;
+                stroke-linecap: round;
+                stroke-linejoin: round;
+            }
+
+            body {
+                overflow: auto !important;
+            }
+
+            .dashboard {
+                flex-direction: column;
+                height: auto;
+                min-height: 100vh;
+                padding-top: 48px;
+            }
+
+            .sidebar {
+                width: 100% !important;
+                height: auto !important;
+                overflow-y: visible !important;
+                box-shadow: none !important;
+                border-right: none !important;
+                padding: 16px;
+                gap: 14px;
+            }
+
+            .sidebar.hidden {
+                display: none !important;
+            }
+
+            .preview-area {
+                padding: 16px 8px !important;
+                width: 100%;
+            }
+
+            .preview-area.hidden {
+                display: none !important;
+            }
+
+            /* Scala il foglio A4 per entrare nel viewport */
+            .a4-page {
+                transform-origin: top center;
+                transform: scale(var(--mobile-scale, 0.47));
+                margin-bottom: calc(-297mm * (1 - var(--mobile-scale, 0.47)) + 16px);
+            }
+
+            .preview-header h2 {
+                font-size: 1rem;
+            }
+
+            /* Controlli touch-friendly */
+            input[type="range"] {
+                height: 6px;
+            }
+
+            input[type="range"]::-webkit-slider-thumb {
+                width: 20px;
+                height: 20px;
+            }
+
+            .btn-print {
+                padding: 14px 20px;
+                font-size: 0.85rem;
+            }
+
+            .logo-container svg {
+                width: 28px;
+                height: 28px;
+            }
+
+            .logo-container h1 {
+                font-size: 0.95rem;
+            }
+
+            textarea {
+                min-height: 140px !important;
+            }
+
+            .add-label-row input[type="text"] {
+                padding: 10px 12px;
+            }
+
+            .btn-add-label {
+                padding: 10px 16px;
+            }
+        }
+
+        /* Small phones */
+        @media (max-width: 390px) {
+            .sidebar {
+                padding: 12px;
+                gap: 12px;
+            }
+
+            .control-group, .product-editor {
+                padding: 10px;
+            }
         }
     </style>
 </head>
 <body>
+
+    <!-- Tab Mobile -->
+    <div class="mobile-nav">
+        <button class="mobile-tab active" id="tab-edit" onclick="switchTab('edit')">
+            <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+            Modifica
+        </button>
+        <button class="mobile-tab" id="tab-preview" onclick="switchTab('preview')">
+            <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+            Anteprima
+        </button>
+    </div>
 
     <div class="dashboard">
         <!-- Sidebar Controlli -->
@@ -906,6 +1080,39 @@
     </template>
 
     <script>
+        // ===== MOBILE TAB SWITCH =====
+        function switchTab(tab) {
+            const sidebar = document.querySelector('.sidebar');
+            const preview = document.querySelector('.preview-area');
+            const tabEdit = document.getElementById('tab-edit');
+            const tabPreview = document.getElementById('tab-preview');
+
+            if (tab === 'edit') {
+                sidebar.classList.remove('hidden');
+                preview.classList.add('hidden');
+                tabEdit.classList.add('active');
+                tabPreview.classList.remove('active');
+            } else {
+                sidebar.classList.add('hidden');
+                preview.classList.remove('hidden');
+                tabEdit.classList.remove('active');
+                tabPreview.classList.add('active');
+                // Ricalcola scala dopo il tab switch
+                requestAnimationFrame(calcMobileScale);
+            }
+        }
+
+        // Calcola fattore di scala per A4 su mobile
+        function calcMobileScale() {
+            if (window.innerWidth > 768) return;
+            const vw = window.innerWidth - 16; // 8px padding per lato
+            const a4w = 210 * 3.7795; // mm → px (1mm ≈ 3.78px a 96dpi)
+            const scale = Math.min(1, vw / a4w);
+            document.documentElement.style.setProperty('--mobile-scale', scale.toFixed(3));
+        }
+
+        window.addEventListener('resize', calcMobileScale);
+
         // Mappa delle traduzioni e pulizia nomi
         const productMap = {
             "plain croissant": "Plain Croissant",
@@ -1049,7 +1256,8 @@
 
         // Inizializzazione dell'applicazione
         window.addEventListener('DOMContentLoaded', () => {
-            updateSizeAndRebuild(); // calcola layout iniziale
+            calcMobileScale();
+            updateSizeAndRebuild();
             loadInitialData();
         });
 
