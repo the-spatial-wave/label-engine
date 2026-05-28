@@ -514,8 +514,7 @@
             box-sizing: border-box;
             box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
             display: grid;
-            grid-template-columns: repeat(5, var(--label-width));
-            grid-template-rows: repeat(10, var(--label-height));
+            /* colonne e righe gestite da JS via updateSizeAndRebuild() */
             gap: 0;
             justify-content: center;
             align-content: center;
@@ -845,11 +844,17 @@
                     Dimensionamento
                 </div>
                 <div class="sliders">
-                    <label for="padding-slider">Margine Pagina: <span id="padding-val" class="val">5mm</span></label>
-                    <input type="range" id="padding-slider" min="4" max="16" step="1" value="5" oninput="updateStyles()">
+                    <label for="label-width-slider">Larghezza Etichetta: <span id="label-width-val" class="val">38mm</span></label>
+                    <input type="range" id="label-width-slider" min="25" max="95" step="1" value="38" oninput="updateSizeAndRebuild()">
 
-                    <label for="gap-slider">Spazio tra Etichette: <span id="gap-val" class="val">2mm</span></label>
-                    <input type="range" id="gap-slider" min="0" max="10" step="1" value="2" oninput="updateStyles()">
+                    <label for="label-height-slider">Altezza Etichetta: <span id="label-height-val" class="val">25mm</span></label>
+                    <input type="range" id="label-height-slider" min="15" max="55" step="1" value="25" oninput="updateSizeAndRebuild()">
+
+                    <label for="padding-slider">Margine Pagina: <span id="padding-val" class="val">5mm</span></label>
+                    <input type="range" id="padding-slider" min="2" max="16" step="1" value="5" oninput="updateSizeAndRebuild()">
+                </div>
+                <div class="layout-info" id="layout-info" style="text-align:center; font-size:0.68rem; color:var(--hotel-gold); margin-top:4px; font-weight:500; letter-spacing:0.03em;">
+                    5 col × 10 righe — 50 per foglio
                 </div>
             </div>
             
@@ -1006,8 +1011,45 @@
             return name;
         }
 
+        // Layout corrente — ricalcolato da updateSizeAndRebuild()
+        let currentCols = 5;
+        let currentRows = 10;
+
+        // Ricalcola griglia e ricostruisce etichette
+        function updateSizeAndRebuild() {
+            const w = parseInt(document.getElementById('label-width-slider').value);
+            const h = parseInt(document.getElementById('label-height-slider').value);
+            const pad = parseInt(document.getElementById('padding-slider').value);
+
+            // Aggiorna display e CSS vars
+            document.getElementById('label-width-val').textContent = w + 'mm';
+            document.getElementById('label-height-val').textContent = h + 'mm';
+            document.getElementById('padding-val').textContent = pad + 'mm';
+            document.documentElement.style.setProperty('--label-width', w + 'mm');
+            document.documentElement.style.setProperty('--label-height', h + 'mm');
+            document.documentElement.style.setProperty('--page-padding', pad + 'mm');
+
+            // Calcola quante colonne e righe entrano in A4 (210×297mm)
+            const usableW = 210 - pad * 2;
+            const usableH = 297 - pad * 2;
+            currentCols = Math.max(1, Math.floor(usableW / w));
+            currentRows = Math.max(1, Math.floor(usableH / h));
+
+            // Aggiorna info layout
+            const total = currentCols * currentRows;
+            const info = document.getElementById('layout-info');
+            if (info) info.textContent = currentCols + ' col × ' + currentRows + ' righe — ' + total + ' per foglio';
+
+            // Aggiorna header preview
+            const previewP = document.querySelector('.preview-header p');
+            if (previewP) previewP.textContent = 'Etichette ' + (w/10).toFixed(1) + '×' + (h/10).toFixed(1) + ' cm — ' + total + ' per pagina A4 (' + currentCols + ' col × ' + currentRows + ' righe)';
+
+            updateLabels();
+        }
+
         // Inizializzazione dell'applicazione
         window.addEventListener('DOMContentLoaded', () => {
+            updateSizeAndRebuild(); // calcola layout iniziale
             loadInitialData();
         });
 
@@ -1040,22 +1082,24 @@
                 .filter(line => line.length > 0);
         }
 
-        // Aggiorna la vista delle etichette (suddivide in fogli da 10)
+        // Aggiorna la vista delle etichette
         function updateLabels() {
             const text = document.getElementById('product-list').value;
             const products = text.split('\n')
                                  .map(p => p.trim())
                                  .filter(p => p.length > 0);
-            
+
             const container = document.getElementById('pages-container');
             container.innerHTML = '';
 
-            const itemsPerPage = 50;
-            const totalPages = Math.ceil(products.length / itemsPerPage);
+            const itemsPerPage = currentCols * currentRows;
+            const totalPages = Math.max(1, Math.ceil(products.length / itemsPerPage));
 
             for (let pageIdx = 0; pageIdx < totalPages; pageIdx++) {
                 const pageDiv = document.createElement('div');
                 pageDiv.className = 'a4-page';
+                pageDiv.style.gridTemplateColumns = 'repeat(' + currentCols + ', var(--label-width))';
+                pageDiv.style.gridTemplateRows = 'repeat(' + currentRows + ', var(--label-height))';
 
                 const pageProducts = products.slice(pageIdx * itemsPerPage, (pageIdx + 1) * itemsPerPage);
 
@@ -1165,15 +1209,6 @@
             const colorGold = document.getElementById('color-gold').value;
             document.documentElement.style.setProperty('--label-color-blue', colorBlue);
             document.documentElement.style.setProperty('--label-color-gold', colorGold);
-
-            // Aggiorna margini e spazi
-            const padding = document.getElementById('padding-slider').value;
-            document.getElementById('padding-val').textContent = padding + 'mm';
-            document.documentElement.style.setProperty('--page-padding', padding + 'mm');
-
-            const gap = document.getElementById('gap-slider').value;
-            document.getElementById('gap-val').textContent = gap + 'mm';
-            document.documentElement.style.setProperty('--label-gap', gap + 'mm');
 
             // Aggiorna dimensione logo
             const logoSize = document.getElementById('logo-size-slider').value;
