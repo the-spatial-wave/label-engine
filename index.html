@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generatore Etichette Premium - Il Tridente Hotel</title>
+    
+    <!-- Google Fonts per un'estetica elegante e luxury -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Montserrat:wght@400;500;600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ==========================================================================
+           RESET E VARIABILI DI DESIGN (DASHBOARD)
+           ========================================================================== */
+        :root {
+            --bg-primary: #090d16;
+            --bg-secondary: #111827;
+            --bg-tertiary: #1f2937;
+            --text-light: #f3f4f6;
+            --text-muted: #9ca3af;
+            
+            /* Palette hotel ricavata dalle immagini */
+            --hotel-blue: #1f3b8b;
+            --hotel-gold: #c89f6d;
+            --hotel-white: #ffffff;
+            
+            /* Variabili modificabili per le etichette */
+            --label-font-title: 'Cinzel', serif;
+            --label-font-size: 0.44rem;
+            --label-color-blue: #1f3b8b;
+            --label-color-gold: #c89f6d;
+
+            --page-padding: 5mm;
+            --label-gap: 2mm;
+
+            --label-width: 38mm;
+            --label-height: 25mm;
+
+            --label-logo-height: 15px;
+            --label-footer-size: 0.34rem;
+            --label-location-size: 0.28rem;
+
+            --outer-border-width: 0.8px;
+            --inner-border-width: 0.5px;
+            --border-radius-outer: 3px;
+            --border-radius-inner: 2px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-light);
+            min-height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* ==========================================================================
+           LAYOUT DASHBOARD (SIDEBAR + ANTEPRIMA)
+           ========================================================================== */
+        .dashboard {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+        }
+
+        /* Sidebar di controllo */
+        .sidebar {
+            width: 380px;
+            background-color: var(--bg-secondary);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+            flex-shrink: 0;
+            box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid transparent;
+            border-image: linear-gradient(90deg, transparent, var(--hotel-gold), transparent) 1;
+        }
+
+        .logo-container svg {
+            width: 36px;
+            height: 36px;
+            color: var(--hotel-gold);
+        }
+
+        .logo-container h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            letter-spacing: 0.1em;
+            color: var(--text-light);
+            line-height: 1.2;
+        }
+
+        .logo-container h1 span {
+            display: block;
+            font-size: 0.65rem;
+            font-family: 'Outfit', sans-serif;
+            color: var(--text-muted);
+            letter-spacing: 0.2em;
+            margin-top: 2px;
+        }
+
+        .section-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--hotel-gold);
+            margin-bottom: 8px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .section-title svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+            stroke: var(--hotel-gold);
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background-color: rgba(255, 255, 255, 0.02);
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .control-group:hover {
+            border-color: rgba(200, 159, 109, 0.12);
+            box-shadow: 0 0 14px rgba(200, 159, 109, 0.05);
+        }
+
+        /* Product Editor — hero section */
+        .product-editor {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background-color: rgba(200, 159, 109, 0.04);
+            padding: 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(200, 159, 109, 0.15);
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .product-editor:hover {
+            border-color: rgba(200, 159, 109, 0.28);
+            box-shadow: 0 0 18px rgba(200, 159, 109, 0.08);
+        }
+
+        .product-editor-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .product-editor-header .section-title {
+            margin-bottom: 0;
+        }
+
+        .label-count-badge {
+            background: rgba(200, 159, 109, 0.15);
+            color: var(--hotel-gold);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            white-space: nowrap;
+        }
+
+        .product-editor textarea {
+            border-left: 2px solid var(--hotel-gold);
+            min-height: 200px;
+            font-size: 0.82rem;
+        }
+
+        .product-editor .editor-hint {
+            font-size: 0.68rem;
+            color: var(--text-muted);
+            opacity: 0.7;
+            font-style: italic;
+        }
+
+        .add-label-row {
+            display: flex;
+            gap: 6px;
+        }
+
+        .add-label-row input[type="text"] {
+            flex: 1;
+            padding: 8px 10px;
+            font-size: 0.8rem;
+            border-radius: 6px 0 0 6px;
+            border: 1px solid rgba(200, 159, 109, 0.25);
+            background-color: var(--bg-tertiary);
+            color: var(--text-light);
+            font-family: 'Outfit', sans-serif;
+            transition: border-color 0.2s ease;
+        }
+
+        .add-label-row input[type="text"]:focus {
+            outline: none;
+            border-color: var(--hotel-gold);
+            box-shadow: 0 0 0 2px rgba(200, 159, 109, 0.15);
+        }
+
+        .add-label-row input[type="text"]::placeholder {
+            color: var(--text-muted);
+            opacity: 0.5;
+        }
+
+        .btn-add-label {
+            background: var(--hotel-gold);
+            color: var(--bg-primary);
+            border: none;
+            padding: 8px 14px;
+            border-radius: 0 6px 6px 0;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.75rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            letter-spacing: 0.03em;
+        }
+
+        .btn-add-label:hover {
+            background: #d6af7e;
+        }
+
+        .btn-add-label svg {
+            width: 14px;
+            height: 14px;
+            stroke: var(--bg-primary);
+            fill: none;
+            stroke-width: 2.5;
+            stroke-linecap: round;
+        }
+
+        /* Guida Stampa collassabile */
+        .guide-details {
+            background-color: rgba(255, 255, 255, 0.02);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            transition: border-color 0.25s ease;
+        }
+
+        .guide-details:hover {
+            border-color: rgba(200, 159, 109, 0.12);
+        }
+
+        .guide-details summary {
+            padding: 12px 14px;
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .guide-details summary::-webkit-details-marker { display: none; }
+
+        .guide-details summary .section-title {
+            margin-bottom: 0;
+        }
+
+        .guide-details .chevron {
+            width: 14px;
+            height: 14px;
+            stroke: var(--text-muted);
+            fill: none;
+            stroke-width: 2;
+            transition: transform 0.25s ease;
+        }
+
+        .guide-details[open] .chevron {
+            transform: rotate(180deg);
+        }
+
+        .guide-details .instructions {
+            padding: 0 14px 14px 14px;
+        }
+
+        label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        label span.val {
+            color: var(--hotel-gold);
+        }
+
+        input[type="text"], select, textarea {
+            width: 100%;
+            background-color: var(--bg-tertiary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-light);
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85rem;
+            transition: all 0.2s ease;
+        }
+
+        input[type="text"]:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--hotel-gold);
+            box-shadow: 0 0 0 2px rgba(200, 159, 109, 0.2);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 180px;
+            font-family: monospace;
+            line-height: 1.4;
+            font-size: 0.8rem;
+        }
+
+        .color-pickers {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .color-picker-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: var(--bg-tertiary);
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .color-picker-wrapper input[type="color"] {
+            border: none;
+            background: none;
+            width: 28px;
+            height: 28px;
+            cursor: pointer;
+        }
+
+        .color-picker-wrapper span {
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+
+        .sliders {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--hotel-gold);
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .btn-print {
+            background: linear-gradient(135deg, var(--hotel-gold) 0%, #d6af7e 50%, var(--hotel-gold) 100%);
+            background-size: 200% 200%;
+            color: var(--bg-primary);
+            border: none;
+            padding: 14px 24px;
+            border-radius: 8px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(200, 159, 109, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-print:hover {
+            background-position: 100% 100%;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(200, 159, 109, 0.45);
+        }
+
+        .btn-print:active {
+            transform: translateY(1px);
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .btn-print::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 60%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            pointer-events: none;
+        }
+
+        .btn-print:hover::after {
+            animation: shimmer 0.8s ease forwards;
+        }
+
+        .instructions {
+            font-size: 0.75rem;
+            line-height: 1.5;
+            color: var(--text-muted);
+            border-left: 2px solid var(--hotel-gold);
+            padding-left: 10px;
+            margin-top: 8px;
+        }
+
+        /* Area anteprima di stampa */
+        .preview-area {
+            flex-grow: 1;
+            padding: 40px;
+            overflow-y: auto;
+            background-color: var(--bg-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            background-image: radial-gradient(circle at 50% 50%, rgba(31, 59, 139, 0.15) 0%, transparent 80%);
+        }
+
+        .preview-header {
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .preview-header h2 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: var(--text-light);
+            letter-spacing: 0.05em;
+        }
+
+        .preview-header p {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* ==========================================================================
+           FOGLIO A4 E STRUTTURA ETICHETTA (PER ANTEPRIMA E STAMPA)
+           ========================================================================== */
+        .a4-page {
+            width: 210mm;
+            height: 297mm;
+            background-color: var(--hotel-white);
+            color: #000000;
+            padding: var(--page-padding);
+            box-sizing: border-box;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            display: grid;
+            grid-template-columns: repeat(5, var(--label-width));
+            grid-template-rows: repeat(10, var(--label-height));
+            gap: 0;
+            justify-content: center;
+            align-content: center;
+            margin-bottom: 30px;
+            position: relative;
+            page-break-after: always;
+            page-break-inside: avoid;
+        }
+
+        .a4-page:last-child {
+            margin-bottom: 0;
+            page-break-after: avoid;
+        }
+
+        /* Cella con linea di taglio tratteggiata */
+        .label-cell {
+            width: var(--label-width);
+            height: var(--label-height);
+            border: 0.5px dashed #ccc;
+            box-sizing: border-box;
+            padding: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Etichetta Singola */
+        .label-card {
+            border: var(--outer-border-width) solid var(--label-color-blue);
+            border-radius: var(--border-radius-outer);
+            padding: 2px;
+            box-sizing: border-box;
+            background-color: var(--hotel-white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .label-inner {
+            border: var(--inner-border-width) solid var(--label-color-gold);
+            border-radius: var(--border-radius-inner);
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            padding: 2px 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            text-align: center;
+            position: relative;
+        }
+
+        /* Logo Tridente Hotel SVG */
+        .label-logo {
+            width: auto;
+            height: var(--label-logo-height);
+            margin-bottom: 0px;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .label-logo .logo-outer-border {
+            stroke: var(--label-color-blue);
+        }
+
+        .label-logo .logo-inner-border {
+            stroke: var(--label-color-gold);
+        }
+
+        .label-logo .logo-rod {
+            stroke: var(--label-color-blue);
+        }
+
+        .label-logo .logo-fill {
+            fill: var(--label-color-blue);
+        }
+
+        /* Nome Prodotto */
+        .label-title {
+            font-family: var(--label-font-title);
+            font-size: var(--label-font-size);
+            font-weight: 600;
+            color: var(--label-color-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            line-height: 1.15;
+            margin: 1px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-grow: 1;
+            word-break: break-word;
+        }
+
+        .label-title.long-text {
+            font-size: calc(var(--label-font-size) * 0.85);
+        }
+
+        .label-title.extra-long-text {
+            font-size: calc(var(--label-font-size) * 0.7);
+        }
+
+        /* Dettagli in basso */
+        .label-footer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1px;
+            flex-shrink: 0;
+        }
+
+        .label-hotel-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: var(--label-footer-size);
+            font-weight: 600;
+            color: var(--label-color-gold);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        .label-location {
+            font-family: 'Outfit', sans-serif;
+            font-size: var(--label-location-size);
+            font-weight: 400;
+            color: var(--text-muted);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        /* ==========================================================================
+           REGOLE STAMPA (@media print)
+           ========================================================================== */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 0;
+            }
+            
+            body {
+                background-color: var(--hotel-white) !important;
+                color: #000000 !important;
+                min-height: auto;
+                overflow: visible;
+                display: block;
+            }
+
+            .sidebar {
+                display: none !important;
+            }
+
+            .preview-area {
+                padding: 0 !important;
+                background: none !important;
+                overflow: visible !important;
+                display: block !important;
+            }
+
+            .preview-header {
+                display: none !important;
+            }
+
+            .a4-page {
+                margin: 0 !important;
+                box-shadow: none !important;
+                border: none !important;
+                /* Dimensioni esatte A4 in stampa */
+                width: 210mm !important;
+                height: 297mm !important;
+                max-width: 210mm !important;
+                max-height: 297mm !important;
+                page-break-after: always !important;
+                page-break-inside: avoid !important;
+                /* Forza rendering colori di sfondo e bordi in stampa */
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .a4-page:last-child {
+                page-break-after: avoid !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard">
+        <!-- Sidebar Controlli -->
+        <div class="sidebar">
+            <div class="logo-container">
+                <!-- SVG Tridente Hotel -->
+                <svg viewBox="0 0 100 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="6" y="6" width="88" height="148" rx="44" stroke="currentColor" stroke-width="6" />
+                    <line x1="50" y1="32" x2="50" y2="114" stroke="currentColor" stroke-width="6" stroke-linecap="round" />
+                    <polygon points="50,16 58,36 50,32 42,36" fill="currentColor" />
+                    <circle cx="50" cy="122" r="7" fill="currentColor" />
+                    <line x1="36" y1="58" x2="36" y2="100" stroke="currentColor" stroke-width="5" stroke-linecap="round" />
+                    <polygon points="36,46 41,58 36,55 31,58" fill="currentColor" />
+                    <line x1="33" y1="100" x2="39" y2="100" stroke="currentColor" stroke-width="5" stroke-linecap="round" />
+                    <line x1="64" y1="58" x2="64" y2="100" stroke="currentColor" stroke-width="5" stroke-linecap="round" />
+                    <polygon points="64,46 69,58 64,55 59,58" fill="currentColor" />
+                    <line x1="61" y1="100" x2="67" y2="100" stroke="currentColor" stroke-width="5" stroke-linecap="round" />
+                    <line x1="36" y1="84" x2="64" y2="72" stroke="currentColor" stroke-width="5" stroke-linecap="round" />
+                </svg>
+                <h1>
+                    IL TRIDENTE
+                    <span>LABEL ENGINE</span>
+                </h1>
+            </div>
+
+            <!-- Pulsante Stampa -->
+            <button class="btn-print" onclick="window.print()">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                    <path d="M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"></path>
+                    <rect x="6" y="14" width="12" height="8"></rect>
+                </svg>
+                Stampa Etichette (A4)
+            </button>
+
+            <!-- Guida Stampa — collassabile -->
+            <details class="guide-details">
+                <summary>
+                    <div class="section-title">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                        Guida alla Stampa
+                    </div>
+                    <svg class="chevron" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                </summary>
+                <div class="instructions">
+                    1. Clicca su <strong>Stampa</strong>.<br>
+                    2. Imposta la destinazione su <strong>Salva in PDF</strong> o seleziona la stampante.<br>
+                    3. Imposta il formato carta su <strong>A4</strong>.<br>
+                    4. Nelle impostazioni avanzate, imposta i <strong>Margini su Nessuno</strong> (o 0).<br>
+                    5. Abilita la spunta su <strong>Grafica di sfondo</strong> per stampare i colori.
+                </div>
+            </details>
+
+            <!-- Lista Prodotti — Hero Section -->
+            <div class="product-editor">
+                <div class="product-editor-header">
+                    <div class="section-title">
+                        <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                        Lista Prodotti
+                    </div>
+                    <span class="label-count-badge" id="label-count">0 etichette</span>
+                </div>
+                <div class="add-label-row">
+                    <input type="text" id="new-label-input" placeholder="Nome nuova etichetta..." onkeydown="if(event.key==='Enter'){addLabel();event.preventDefault()}">
+                    <button class="btn-add-label" onclick="addLabel()">
+                        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        Aggiungi
+                    </button>
+                </div>
+                <span class="editor-hint">oppure modifica direttamente la lista — ogni riga = un'etichetta</span>
+                <textarea id="product-list" oninput="updateLabels()" placeholder="Scrivi un prodotto per riga...&#10;&#10;Es:&#10;Plain Croissant&#10;Orange Juice&#10;Scrambled Eggs"></textarea>
+            </div>
+
+            <!-- Stile e Caratteri -->
+            <div class="control-group">
+                <div class="section-title">
+                    <svg viewBox="0 0 24 24"><polyline points="4 7 4 4 20 4 20 7"></polyline><line x1="9" y1="20" x2="15" y2="20"></line><line x1="12" y1="4" x2="12" y2="20"></line></svg>
+                    Personalizzazione
+                </div>
+
+                <label for="font-select">Carattere Titolo:</label>
+                <select id="font-select" onchange="updateStyles()">
+                    <option value="'Cinzel', serif">Cinzel (Luxury Serif)</option>
+                    <option value="'Cormorant Garamond', serif">Cormorant (Elegant Serif)</option>
+                    <option value="'Outfit', sans-serif">Outfit (Modern Sans-Serif)</option>
+                    <option value="'Montserrat', sans-serif">Montserrat (Classic Sans-Serif)</option>
+                </select>
+
+                <div class="sliders" style="margin-top: 10px;">
+                    <label for="font-size-slider">Dimensione Testo: <span id="font-size-val" class="val">0.44rem</span></label>
+                    <input type="range" id="font-size-slider" min="0.3" max="0.7" step="0.02" value="0.44" oninput="updateStyles()">
+                </div>
+            </div>
+
+            <!-- Elementi Etichetta — Logo & Footer -->
+            <div class="control-group">
+                <div class="section-title">
+                    <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                    Elementi Etichetta
+                </div>
+                <div class="sliders">
+                    <label for="logo-size-slider">Dimensione Logo: <span id="logo-size-val" class="val">15px</span></label>
+                    <input type="range" id="logo-size-slider" min="8" max="24" step="1" value="15" oninput="updateStyles()">
+
+                    <label for="footer-size-slider">Testo Footer: <span id="footer-size-val" class="val">0.34rem</span></label>
+                    <input type="range" id="footer-size-slider" min="0.18" max="0.50" step="0.02" value="0.34" oninput="updateStyles()">
+                </div>
+            </div>
+
+            <!-- Tavolozza Colori -->
+            <div class="control-group">
+                <div class="section-title">
+                    <svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r="2.5"></circle><circle cx="17.5" cy="10.5" r="2.5" fill="none"></circle><circle cx="8.5" cy="7.5" r="2.5" fill="none"></circle><circle cx="6.5" cy="12.5" r="2.5" fill="none"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.93 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.04-.23-.29-.38-.63-.38-1.01 0-.83.67-1.5 1.5-1.5H16c3.31 0 6-2.69 6-6 0-5.17-4.49-9-10-9z"></path></svg>
+                    Palette Colori
+                </div>
+                <div class="color-pickers">
+                    <div>
+                        <label>Blu Hotel</label>
+                        <div class="color-picker-wrapper">
+                            <input type="color" id="color-blue" value="#1f3b8b" oninput="updateStyles()">
+                            <span>Blu</span>
+                        </div>
+                    </div>
+                    <div>
+                        <label>Oro Hotel</label>
+                        <div class="color-picker-wrapper">
+                            <input type="color" id="color-gold" value="#c89f6d" oninput="updateStyles()">
+                            <span>Oro</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Margini e Layout Fogli -->
+            <div class="control-group">
+                <div class="section-title">
+                    <svg viewBox="0 0 24 24"><line x1="3" y1="12" x2="21" y2="12"></line><polyline points="16 6 21 12 16 18"></polyline><line x1="21" y1="6" x2="21" y2="18"></line><line x1="3" y1="6" x2="3" y2="18"></line></svg>
+                    Dimensionamento
+                </div>
+                <div class="sliders">
+                    <label for="padding-slider">Margine Pagina: <span id="padding-val" class="val">5mm</span></label>
+                    <input type="range" id="padding-slider" min="4" max="16" step="1" value="5" oninput="updateStyles()">
+
+                    <label for="gap-slider">Spazio tra Etichette: <span id="gap-val" class="val">2mm</span></label>
+                    <input type="range" id="gap-slider" min="0" max="10" step="1" value="2" oninput="updateStyles()">
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- Area Anteprima -->
+        <div class="preview-area">
+            <div class="preview-header">
+                <h2>Anteprima di Stampa Foglio A4</h2>
+                <p>Etichette 3.8×2.5 cm — 50 per pagina A4 (5 colonne × 10 righe)</p>
+            </div>
+            <div id="pages-container">
+                <!-- I fogli A4 generati via JS verranno inseriti qui -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Template per l'SVG del Logo Hotel (riutilizzato in ogni etichetta) -->
+    <template id="logo-template">
+        <svg class="label-logo" viewBox="0 0 100 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Cornice esterna a capsula -->
+            <rect x="6" y="6" width="88" height="148" rx="44" class="logo-outer-border" stroke-width="3" />
+            <!-- Cornice interna a capsula -->
+            <rect x="12" y="12" width="76" height="136" rx="38" class="logo-inner-border" stroke-width="1.2" />
+            <!-- Asta centrale del Tridente -->
+            <line x1="50" y1="32" x2="50" y2="114" class="logo-rod" stroke-width="3.2" stroke-linecap="round" />
+            <!-- Punta centrale -->
+            <polygon points="50,16 54.5,32 50,28.5 45.5,32" class="logo-fill" />
+            <!-- Cerchio inferiore -->
+            <circle cx="50" cy="122" r="3.8" class="logo-fill" />
+            
+            <!-- Asta sinistra -->
+            <line x1="36" y1="58" x2="36" y2="100" class="logo-rod" stroke-width="2.6" stroke-linecap="round" />
+            <!-- Punta sinistra -->
+            <polygon points="36,46 40.5,58 36,55 31.5,58" class="logo-fill" />
+            <!-- Serif base sinistra -->
+            <line x1="33" y1="100" x2="39" y2="100" class="logo-rod" stroke-width="2" stroke-linecap="round" />
+            
+            <!-- Asta destra -->
+            <line x1="64" y1="58" x2="64" y2="100" class="logo-rod" stroke-width="2.6" stroke-linecap="round" />
+            <!-- Punta destra -->
+            <polygon points="64,46 68.5,58 64,55 59.5,58" class="logo-fill" />
+            <!-- Serif base destra -->
+            <line x1="61" y1="100" x2="67" y2="100" class="logo-rod" stroke-width="2" stroke-linecap="round" />
+            
+            <!-- Connessione trasversale inclinata (Stile "H" e "T" uniti) -->
+            <line x1="36" y1="84" x2="64" y2="72" class="logo-rod" stroke-width="2.8" stroke-linecap="round" />
+        </svg>
+    </template>
+
+    <script>
+        // Mappa delle traduzioni e pulizia nomi
+        const productMap = {
+            "plain croissant": "Plain Croissant",
+            "apricot croissant": "Apricot Croissant",
+            "chocolate croissant": "Chocolate Croissant",
+            "cereals": "Cereals",
+            "muesli": "Muesli",
+            "corn flakes": "Corn Flakes",
+            "puffed rise": "Puffed Rice",
+            "toasted bread": "Toasted Bread",
+            "biscuits": "Biscuits",
+            "jams": "Jams",
+            "plain yogurt": "Plain Yogurt",
+            "fruit yogurt": "Fruit Yogurt",
+            "fruit salad ( macedonia": "Fruit Salad",
+            "fruit salad ( macedonia )": "Fruit Salad",
+            "fruit salad": "Fruit Salad",
+            "bread": "Bread",
+            "scrambled eggs": "Scrambled Eggs",
+            "hard boiled eggs": "Hard Boiled Eggs",
+            "wholemeal bread ( pane integrated )": "Wholemeal Bread",
+            "wholemeal bread": "Wholemeal Bread",
+            "white bread": "White Bread",
+            "ham": "Ham",
+            "raw ham ( prosciutto crudo )": "Raw Ham",
+            "raw ham": "Raw Ham",
+            "ham ( cotton )": "Cooked Ham",
+            "ham ( cotton": "Cooked Ham",
+            "cooked ham": "Cooked Ham",
+            "roasted turkey": "Roasted Turkey",
+            "emmental  cheese": "Emmental Cheese",
+            "emmental cheese": "Emmental Cheese",
+            "asiago cheese": "Asiago Cheese",
+            "fontina cheese": "Fontina Cheese",
+            "orange juice": "Orange Juice",
+            "multifruit juice": "Multifruit Juice",
+            "butter": "Butter",
+            "herbal": "Herbal",
+            "cream croissant": "Cream Croissant"
+        };
+
+        // Elenco prodotti pre-definito di backup (pulito) in caso di problemi CORS con fetch
+        const defaultProducts = [
+            "Plain Croissant",
+            "Apricot Croissant",
+            "Chocolate Croissant",
+            "Cereals",
+            "Muesli",
+            "Corn Flakes",
+            "Puffed Rice",
+            "Toasted Bread",
+            "Biscuits",
+            "Jams",
+            "Plain Yogurt",
+            "Fruit Yogurt",
+            "Fruit Salad",
+            "Bread",
+            "Scrambled Eggs",
+            "Hard Boiled Eggs",
+            "Wholemeal Bread",
+            "White Bread",
+            "Ham",
+            "Raw Ham",
+            "Cooked Ham",
+            "Roasted Turkey",
+            "Emmental Cheese",
+            "Asiago Cheese",
+            "Fontina Cheese",
+            "Orange Juice",
+            "Multifruit Juice",
+            "Butter",
+            "Herbal",
+            "Cream Croissant"
+        ];
+
+        // Pulizia e traduzione intelligente del testo in input
+        function cleanName(rawName) {
+            let name = rawName.trim();
+            if (!name) return "";
+
+            // Ricerca diretta nella mappa (case insensitive)
+            const searchKey = name.toLowerCase().replace(/\s+/g, ' ');
+            if (productMap[searchKey]) {
+                return productMap[searchKey];
+            }
+
+            // Pulizia generica se non trovato in mappa
+            // Rimuove parentesi e testo italiano contenuto (es: "Fruit salad ( Macedonia" o "Wholemeal bread ( pane integrated )")
+            name = name.replace(/\([^)]*\)?/g, '').trim();
+            
+            // Rimozione di eventuali caratteri di punteggiatura residui
+            name = name.replace(/[()]/g, '').trim();
+
+            // Trasforma in Title Case
+            name = name.split(/\s+/)
+                       .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+                       .join(' ');
+
+            // Correzione di typo comuni
+            name = name.replace(/Puffed Rise/g, "Puffed Rice");
+            name = name.replace(/Cotton/g, "Cooked Ham");
+
+            return name;
+        }
+
+        // Inizializzazione dell'applicazione
+        window.addEventListener('DOMContentLoaded', () => {
+            loadInitialData();
+        });
+
+        // Carica i dati dal file di testo o usa il backup
+        function loadInitialData() {
+            const textarea = document.getElementById('product-list');
+            
+            fetch('Plain croissant.txt?t=' + new Date().getTime())
+                .then(response => {
+                    if (!response.ok) throw new Error('CORS or file missing');
+                    return response.text();
+                })
+                .then(text => {
+                    const parsed = parseText(text);
+                    textarea.value = parsed.join('\n');
+                    updateLabels();
+                })
+                .catch(err => {
+                    console.log('Using default backup list due to fetch restriction or missing file.', err);
+                    textarea.value = defaultProducts.join('\n');
+                    updateLabels();
+                });
+        }
+
+        // Splitta le righe del file e le pulisce
+        function parseText(text) {
+            return text.split('\n')
+                .map(line => line.replace(/^\d+[\s.:)]+/, '')) // Rimuove eventuali numeri di riga iniziali
+                .map(line => cleanName(line))
+                .filter(line => line.length > 0);
+        }
+
+        // Aggiorna la vista delle etichette (suddivide in fogli da 10)
+        function updateLabels() {
+            const text = document.getElementById('product-list').value;
+            const products = text.split('\n')
+                                 .map(p => p.trim())
+                                 .filter(p => p.length > 0);
+            
+            const container = document.getElementById('pages-container');
+            container.innerHTML = '';
+
+            const itemsPerPage = 50;
+            const totalPages = Math.ceil(products.length / itemsPerPage);
+
+            for (let pageIdx = 0; pageIdx < totalPages; pageIdx++) {
+                const pageDiv = document.createElement('div');
+                pageDiv.className = 'a4-page';
+
+                const pageProducts = products.slice(pageIdx * itemsPerPage, (pageIdx + 1) * itemsPerPage);
+
+                pageProducts.forEach(prod => {
+                    const cell = document.createElement('div');
+                    cell.className = 'label-cell';
+
+                    const labelCard = document.createElement('div');
+                    labelCard.className = 'label-card';
+
+                    const labelInner = document.createElement('div');
+                    labelInner.className = 'label-inner';
+
+                    // Clona l'SVG del logo dal template
+                    const logoTemplate = document.getElementById('logo-template');
+                    const logoSvg = logoTemplate.content.cloneNode(true);
+
+                    const titleH2 = document.createElement('h2');
+                    titleH2.className = 'label-title';
+                    titleH2.textContent = prod;
+
+                    // Gestione testi lunghi per evitare overflow
+                    if (prod.length > 22) {
+                        titleH2.classList.add('extra-long-text');
+                    } else if (prod.length > 15) {
+                        titleH2.classList.add('long-text');
+                    }
+
+                    const footer = document.createElement('div');
+                    footer.className = 'label-footer';
+
+                    const hotelName = document.createElement('div');
+                    hotelName.className = 'label-hotel-name';
+                    hotelName.textContent = 'Il Tridente';
+
+                    const location = document.createElement('div');
+                    location.className = 'label-location';
+                    location.textContent = 'Bibione';
+
+                    footer.appendChild(hotelName);
+                    footer.appendChild(location);
+
+                    labelInner.appendChild(logoSvg);
+                    labelInner.appendChild(titleH2);
+                    labelInner.appendChild(footer);
+                    labelCard.appendChild(labelInner);
+                    cell.appendChild(labelCard);
+                    pageDiv.appendChild(cell);
+                });
+
+                // Celle vuote per completare la griglia
+                const emptySlots = itemsPerPage - pageProducts.length;
+                for (let i = 0; i < emptySlots; i++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'label-cell';
+
+                    const labelCard = document.createElement('div');
+                    labelCard.className = 'label-card';
+                    labelCard.style.border = 'none';
+                    labelCard.style.background = 'transparent';
+
+                    const labelInner = document.createElement('div');
+                    labelInner.className = 'label-inner';
+                    labelInner.style.border = 'none';
+                    labelInner.style.background = 'transparent';
+
+                    labelCard.appendChild(labelInner);
+                    cell.appendChild(labelCard);
+                    pageDiv.appendChild(cell);
+                }
+
+                container.appendChild(pageDiv);
+            }
+
+            // Aggiorna badge contatore
+            const counter = document.getElementById('label-count');
+            if (counter) counter.textContent = products.length + ' etichett' + (products.length === 1 ? 'a' : 'e');
+        }
+
+        // Aggiunge una nuova etichetta dalla barra rapida
+        function addLabel() {
+            const input = document.getElementById('new-label-input');
+            const name = input.value.trim();
+            if (!name) return;
+
+            const textarea = document.getElementById('product-list');
+            const current = textarea.value.trim();
+            textarea.value = current ? current + '\n' + name : name;
+            input.value = '';
+            input.focus();
+            updateLabels();
+        }
+
+        // Aggiorna le proprietà CSS e i testi in base agli slider e selettori
+        function updateStyles() {
+            // Aggiorna font-size
+            const fontSize = document.getElementById('font-size-slider').value;
+            document.getElementById('font-size-val').textContent = fontSize + 'rem';
+            document.documentElement.style.setProperty('--label-font-size', fontSize + 'rem');
+
+            // Aggiorna font-family
+            const fontFamily = document.getElementById('font-select').value;
+            document.documentElement.style.setProperty('--label-font-title', fontFamily);
+
+            // Aggiorna colori
+            const colorBlue = document.getElementById('color-blue').value;
+            const colorGold = document.getElementById('color-gold').value;
+            document.documentElement.style.setProperty('--label-color-blue', colorBlue);
+            document.documentElement.style.setProperty('--label-color-gold', colorGold);
+
+            // Aggiorna margini e spazi
+            const padding = document.getElementById('padding-slider').value;
+            document.getElementById('padding-val').textContent = padding + 'mm';
+            document.documentElement.style.setProperty('--page-padding', padding + 'mm');
+
+            const gap = document.getElementById('gap-slider').value;
+            document.getElementById('gap-val').textContent = gap + 'mm';
+            document.documentElement.style.setProperty('--label-gap', gap + 'mm');
+
+            // Aggiorna dimensione logo
+            const logoSize = document.getElementById('logo-size-slider').value;
+            document.getElementById('logo-size-val').textContent = logoSize + 'px';
+            document.documentElement.style.setProperty('--label-logo-height', logoSize + 'px');
+
+            // Aggiorna dimensione footer (hotel name + location proporzionale)
+            const footerSize = document.getElementById('footer-size-slider').value;
+            document.getElementById('footer-size-val').textContent = footerSize + 'rem';
+            document.documentElement.style.setProperty('--label-footer-size', footerSize + 'rem');
+            document.documentElement.style.setProperty('--label-location-size', (footerSize * 0.82).toFixed(2) + 'rem');
+        }
+    </script>
+</body>
+</html>

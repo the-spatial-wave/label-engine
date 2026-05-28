@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Menu Bimbi — Il Tridente Hotel Bibione</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:  #1f3b8b;
+      --gold:  #c89f6d;
+      --white: #ffffff;
+      --muted: #5e6b7e;
+      --text-dark: #1e293b;
+    }
+
+    body {
+      width: 210mm;
+      height: 297mm;
+      margin: 0 auto;
+      background: #e5e7eb;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    @page { size: A4 portrait; margin: 0; }
+    @media print {
+      body { margin: 0; }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    }
+
+    /* ── FOGLIO ── */
+    .a4 {
+      width: 210mm;
+      height: 297mm;
+      padding: 10mm;
+      background: #e5e7eb;
+      display: flex;
+    }
+
+    /* ── CARD ESTERNA ── */
+    .card {
+      flex: 1;
+      background: var(--white);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── DOPPIO BORDO (CLASSIC RETTO) ── */
+    .inner {
+      flex: 1;
+      border: 2.5px solid var(--blue);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 30px 18px;
+      position: relative;
+    }
+
+    .inner-frame {
+      border: 1px solid var(--gold);
+      position: absolute;
+      inset: 5px;
+      pointer-events: none;
+    }
+
+
+
+    .logo-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    .logo-wrap svg { height: 42px; width: auto; }
+    .lo { stroke: var(--gold); }
+    .li { stroke: var(--gold); }
+    .lr { stroke: var(--gold); }
+    .lf { fill:   var(--gold); }
+
+    .hotel-label-tridente {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.52rem;
+      font-weight: 700;
+      color: var(--blue);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      margin-top: 5px;
+      line-height: 1;
+    }
+
+    .hotel-label-hotel {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.36rem;
+      font-weight: 500;
+      color: var(--gold);
+      letter-spacing: 0.36em;
+      text-transform: uppercase;
+      margin-top: 2px;
+      line-height: 1;
+    }
+
+    /* ── TITOLO ── */
+    .menu-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.55rem;
+      font-weight: 700;
+      color: var(--blue);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    .menu-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 0.85rem;
+      color: var(--gold);
+      letter-spacing: 0.08em;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .rule-main {
+      width: 50%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      margin: 12px 0 10px;
+      flex-shrink: 0;
+    }
+
+    /* ── CORPO: GRID 1 COLONNA AIRY ── */
+    .columns {
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    /* ── SEZIONE ── */
+    .section {
+      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+    }
+
+    .section + .section {
+      border-top: 1px solid rgba(200,159,109,0.3);
+      padding-top: 8px;
+      margin-top: 4px;
+    }
+
+    .section-title {
+      font-family: 'Great Vibes', cursive;
+      font-size: 1.7rem;
+      font-weight: 400;
+      color: var(--gold);
+      text-align: center;
+      display: block;
+      width: 100%;
+      margin-bottom: 4px;
+    }
+
+    /* ── VOCI MENU CENTRATE ── */
+    .item {
+      padding: 5px 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .item-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--blue);
+      letter-spacing: 0.01em;
+      display: block;
+    }
+
+    .item-desc {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.66rem;
+      color: var(--text-dark);
+      font-weight: 400;
+      line-height: 1.35;
+      display: block;
+      margin-top: 1px;
+    }
+
+    .item-de {
+      font-weight: 300;
+      color: var(--muted);
+    }
+
+    /* ── FOOTER ── */
+    .card-footer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1px;
+      margin-top: 12px;
+      flex-shrink: 0;
+    }
+    .footer-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.46rem;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+    }
+    .footer-place {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.4rem;
+      color: var(--muted);
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+<div class="a4">
+  <div class="card">
+    <div class="inner">
+      <div class="inner-frame"></div>
+
+      <!-- LOGO CENTRALE -->
+      <div class="logo-wrap">
+        <svg viewBox="0 0 100 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="6" y="6" width="88" height="148" rx="44" class="lo" stroke-width="3"/>
+          <rect x="12" y="12" width="76" height="136" rx="38" class="li" stroke-width="1.2"/>
+          <line x1="50" y1="32" x2="50" y2="114" class="lr" stroke-width="3.2" stroke-linecap="round"/>
+          <polygon points="50,16 54.5,32 50,28.5 45.5,32" class="lf"/>
+          <circle cx="50" cy="122" r="3.8" class="lf"/>
+          <line x1="36" y1="58" x2="36" y2="100" class="lr" stroke-width="2.6" stroke-linecap="round"/>
+          <polygon points="36,46 40.5,58 36,55 31.5,58" class="lf"/>
+          <line x1="33" y1="100" x2="39" y2="100" class="lr" stroke-width="2" stroke-linecap="round"/>
+          <line x1="64" y1="58" x2="64" y2="100" class="lr" stroke-width="2.6" stroke-linecap="round"/>
+          <polygon points="64,46 68.5,58 64,55 59.5,58" class="lf"/>
+          <line x1="61" y1="100" x2="67" y2="100" class="lr" stroke-width="2" stroke-linecap="round"/>
+          <line x1="36" y1="84" x2="64" y2="72" class="lr" stroke-width="2.8" stroke-linecap="round"/>
+        </svg>
+        <div class="hotel-label-tridente">Il Tridente</div>
+        <div class="hotel-label-hotel">Hotel</div>
+      </div>
+
+      <div class="menu-title">Menu Bimbi</div>
+      <div class="menu-sub">Kindermenü</div>
+      <div class="rule-main"></div>
+
+      <!-- COLONNE PRIMI + SECONDI -->
+      <div class="columns">
+
+        <!-- PRIMI -->
+        <div class="section">
+          <span class="section-title">Primi piatti</span>
+          <div class="item">
+            <span class="item-name">Biancaneve</span>
+            <span class="item-desc">Pennette in bianco al burro o all'olio d'oliva &nbsp;/&nbsp; <span class="item-de">Pennette ohne Soße (mit Butter oder Olivenöl)</span></span>
+          </div>
+          <div class="item">
+            <span class="item-name">Cenerentola</span>
+            <span class="item-desc">Pennette al pomodoro fresco e basilico &nbsp;/&nbsp; <span class="item-de">Pennette mit Tomatensoße und frischem Basilikum</span></span>
+          </div>
+          <div class="item">
+            <span class="item-name">Elefante</span>
+            <span class="item-desc">Pennette al ragù bolognese casereccio &nbsp;/&nbsp; <span class="item-de">Pennette mit Fleischsoße (Bolognese)</span></span>
+          </div>
+          <div class="item">
+            <span class="item-name">Shrek</span>
+            <span class="item-desc">Pennette al pesto leggero alla genovese &nbsp;/&nbsp; <span class="item-de">Pennette mit Pesto Genovese</span></span>
+          </div>
+          <div class="item">
+            <span class="item-name">Sirenetta</span>
+            <span class="item-desc">Tortellini panna e prosciutto cotto &nbsp;/&nbsp; <span class="item-de">Tortellini mit Sahne und gekochtem Schinken</span></span>
+          </div>
+        </div>
+
+        <!-- SECONDI -->
+        <div class="section">
+          <span class="section-title">Secondi piatti</span>
+          <div class="item">
+            <span class="item-name">Crocky</span>
+            <span class="item-desc">Würstel alla griglia con patatine fritte dorate &nbsp;/&nbsp; <span class="item-de">Gegrilltes Würstchen mit goldenen Pommes frites</span></span>
+          </div>
+          <div class="item">
+            <span class="item-name">Uga</span>
+            <span class="item-desc">Cotoletta di pollo croccante con patatine fritte &nbsp;/&nbsp; <span class="item-de">Knuspriges Hühnerschnitzel mit Pommes frites</span></span>
+          </div>
+          <div class="item">
+            <span class="item-name">Bibi</span>
+            <span class="item-desc">Petto di pollo alla griglia con spinaci saltati al burro &nbsp;/&nbsp; <span class="item-de">Gegrillte Hähnchenbrust mit in Butter geschwenktem Spinat</span></span>
+          </div>
+          <div class="item">
+            <span class="item-name">Jonny</span>
+            <span class="item-desc">Nuggets di pollo sfiziosi con patatine fritte &nbsp;/&nbsp; <span class="item-de">Hähnchen-Nuggets mit Pommes frites</span></span>
+          </div>
+          <div class="item">
+            <span class="item-name">Nemo</span>
+            <span class="item-desc">Filetto di pesce panato dorato con patatine fritte &nbsp;/&nbsp; <span class="item-de">Paniertes Fischfilet mit Pommes frites</span></span>
+          </div>
+        </div>
+
+      </div><!-- /columns -->
+
+      <div class="card-footer">
+        <div class="footer-name">Il Tridente Hotel</div>
+        <div class="footer-place">Bibione</div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

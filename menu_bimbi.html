@@ -1,0 +1,1117 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Bimbi - Il Tridente Hotel</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --hotel-blue: #1f3b8b;
+            --hotel-gold: #c89f6d;
+            --hotel-dark: #0d1f4a;
+            --hotel-cream: #faf8f3;
+            --hotel-white: #ffffff;
+            --text-dark: #1a1a2e;
+            --text-muted: #64748b;
+
+            /* Dashboard */
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #121829;
+            --bg-tertiary: #1e2538;
+            --ui-text: #f8fafc;
+            --ui-muted: #64748b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--ui-text);
+            display: flex;
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            width: 340px;
+            background-color: var(--bg-secondary);
+            border-right: 1px solid rgba(255,255,255,0.05);
+            padding: 24px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            overflow-y: auto;
+            flex-shrink: 0;
+            box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+            z-index: 10;
+        }
+
+        .logo-ui {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.07);
+        }
+
+        .logo-ui svg { width: 32px; height: 32px; color: var(--hotel-gold); }
+
+        .logo-ui h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            color: var(--ui-text);
+            line-height: 1.2;
+        }
+
+        .logo-ui h1 span {
+            display: block;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.6rem;
+            color: var(--ui-muted);
+            letter-spacing: 0.2em;
+            margin-top: 2px;
+        }
+
+        .btn-print {
+            background-color: var(--hotel-gold);
+            color: var(--bg-primary);
+            border: none;
+            padding: 11px 18px;
+            border-radius: 6px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(200,159,109,0.3);
+        }
+
+        .btn-print:hover {
+            background-color: #d6af7e;
+            transform: translateY(-1px);
+        }
+
+        .section-title {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--hotel-gold);
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .control-group {
+            background: rgba(255,255,255,0.02);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.03);
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .control-group label {
+            font-size: 0.7rem;
+            color: var(--ui-muted);
+            font-weight: 500;
+        }
+
+        .instructions {
+            font-size: 0.7rem;
+            line-height: 1.5;
+            color: var(--ui-muted);
+            border-left: 2px solid var(--hotel-gold);
+            padding-left: 10px;
+        }
+
+        .style-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .style-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.7rem;
+            color: var(--ui-muted);
+        }
+
+        .style-pill .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* ========== PREVIEW AREA ========== */
+        .preview-area {
+            flex-grow: 1;
+            padding: 40px 30px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-image: radial-gradient(circle at 50% 40%, rgba(31,59,139,0.12) 0%, transparent 70%);
+        }
+
+        .preview-header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .preview-header h2 {
+            font-size: 1.15rem;
+            font-weight: 400;
+            color: var(--ui-text);
+            font-family: 'Cormorant Garamond', serif;
+            letter-spacing: 0.08em;
+        }
+
+        .preview-header p {
+            font-size: 0.75rem;
+            color: var(--ui-muted);
+            margin-top: 4px;
+        }
+
+        /* ========== A4 SHEET (2x2 GRID) ========== */
+        .a4-page {
+            width: 210mm;
+            height: 297mm;
+            background-color: #d9dce3;
+            padding: 7mm;
+            gap: 4mm;
+            box-sizing: border-box;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.6);
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            page-break-after: always;
+            page-break-inside: avoid;
+        }
+
+        /* ========== BASE CARD ========== */
+        .menu-card {
+            background: var(--hotel-white);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border: 1px dashed #b0b8c4;
+        }
+
+        /* ================================================
+           STILE A — CLASSIC (Fedele all'originale)
+           ================================================ */
+        .card-classic {
+            background: var(--hotel-white);
+            padding: 8px;
+        }
+
+        .card-classic .inner-wrap {
+            border: 2px solid var(--hotel-blue);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 12px 14px 8px;
+            position: relative;
+        }
+
+        .card-classic .inner-wrap::after {
+            content: '';
+            position: absolute;
+            inset: 4px;
+            border: 0.8px solid var(--hotel-gold);
+            pointer-events: none;
+        }
+
+        /* Logo area Classic con Bandiere */
+        .card-classic .header-logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 2px;
+            width: 100%;
+        }
+
+
+
+        .card-classic .logo-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .card-classic .logo-block svg.hotel-logo {
+            height: 26px;
+            width: auto;
+        }
+
+        .card-classic .lo { stroke: var(--hotel-gold); }
+        .card-classic .li { stroke: var(--hotel-gold); }
+        .card-classic .lr { stroke: var(--hotel-gold); }
+        .card-classic .lf { fill:   var(--hotel-gold); }
+
+        .card-classic .hotel-label-tridente {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.42rem;
+            font-weight: 700;
+            color: var(--hotel-blue);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-top: 3px;
+            line-height: 1;
+        }
+
+        .card-classic .hotel-label-hotel {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.3rem;
+            font-weight: 500;
+            color: var(--hotel-gold);
+            letter-spacing: 0.32em;
+            text-transform: uppercase;
+            margin-top: 1px;
+            line-height: 1;
+        }
+
+        .card-classic .menu-title-main {
+            font-family: 'Cinzel', serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--hotel-blue);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-align: center;
+            line-height: 1.1;
+            margin: 2px 0 0;
+        }
+
+        .card-classic .menu-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 0.58rem;
+            color: var(--hotel-gold);
+            letter-spacing: 0.05em;
+            margin-top: 1px;
+            line-height: 1;
+        }
+
+        .card-classic .gold-rule {
+            width: 35px;
+            height: 0.8px;
+            background: var(--hotel-gold);
+            margin: 4px auto 3px;
+        }
+
+        .card-classic .section-header {
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.15rem;
+            color: var(--hotel-gold);
+            text-align: center;
+            margin: 3px 0 1px;
+            line-height: 1;
+        }
+
+        .card-classic .dish-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.56rem;
+            font-weight: 600;
+            color: var(--hotel-blue);
+            text-align: center;
+            margin: 2px 0 0;
+            line-height: 1.2;
+        }
+
+        .card-classic .dish-sub {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.46rem;
+            font-weight: 400;
+            color: var(--text-dark);
+            text-align: center;
+            line-height: 1.25;
+            margin-bottom: 1px;
+        }
+
+        .card-classic .dish-sub .de {
+            font-weight: 300;
+            color: var(--text-muted);
+        }
+
+        .card-classic .footer-rule {
+            margin-top: auto;
+            padding-top: 4px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.36rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--hotel-gold);
+            text-align: center;
+        }
+
+        /* ================================================
+           STILE B — PLAYFUL (Per i bambini, colori vivaci)
+           ================================================ */
+        .card-playful {
+            background: linear-gradient(145deg, #fff9f0 0%, #f0f8ff 100%);
+            padding: 10px;
+        }
+
+        .card-playful .inner-wrap {
+            border: 2px solid var(--hotel-gold);
+            border-radius: 12px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 12px 8px;
+            position: relative;
+            background: var(--hotel-white);
+        }
+
+        .card-playful .corner-star {
+            position: absolute;
+            font-size: 0.7rem;
+            color: var(--hotel-gold);
+            opacity: 0.5;
+        }
+
+        .card-playful .corner-star.tl { top: 4px; left: 6px; }
+        .card-playful .corner-star.tr { top: 4px; right: 6px; }
+        .card-playful .corner-star.bl { bottom: 4px; left: 6px; }
+        .card-playful .corner-star.br { bottom: 4px; right: 6px; }
+
+        .card-playful .logo-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            margin-bottom: 4px;
+        }
+
+        .card-playful .logo-badge svg {
+            height: 28px;
+        }
+
+        .card-playful .logo-badge .badge-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.42rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--hotel-gold);
+        }
+
+        .card-playful .menu-title-main {
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.45rem;
+            color: var(--hotel-blue);
+            text-align: center;
+        }
+
+        .card-playful .emoji-row {
+            font-size: 0.8rem;
+            margin: 2px 0 4px;
+            letter-spacing: 0.15em;
+        }
+
+        .card-playful .section-header {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--hotel-white);
+            background: var(--hotel-blue);
+            padding: 2px 12px;
+            border-radius: 20px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin: 5px 0 3px;
+        }
+
+        .card-playful .dish-row {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+            width: 90%;
+            margin: 1.5px 0;
+        }
+
+        .card-playful .dish-icon {
+            font-size: 0.55rem;
+            color: var(--hotel-gold);
+            flex-shrink: 0;
+        }
+
+        .card-playful .dish-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: var(--hotel-blue);
+            line-height: 1.2;
+        }
+
+        .card-playful .dish-sub {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.48rem;
+            font-weight: 300;
+            color: #9ca3af;
+            line-height: 1.2;
+        }
+
+        .card-playful .footer-rule {
+            margin-top: auto;
+            padding-top: 6px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.38rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--hotel-gold);
+            text-align: center;
+        }
+
+        /* ================================================
+           STILE C — EDITORIAL (Moderno, pulito)
+           ================================================ */
+        .card-editorial {
+            background: var(--hotel-cream);
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-editorial .top-bar {
+            background: var(--hotel-blue);
+            padding: 10px 14px 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-editorial .top-bar .hotel-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-editorial .top-bar .hotel-info strong {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.58rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--hotel-white);
+        }
+
+        .card-editorial .top-bar .hotel-info span {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.4rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--hotel-gold);
+            margin-top: 1px;
+        }
+
+        .card-editorial .top-bar svg {
+            height: 30px;
+            filter: brightness(0) invert(1);
+        }
+
+        .card-editorial .ed-content {
+            flex-grow: 1;
+            padding: 10px 14px 8px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-editorial .menu-title-main {
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.5rem;
+            color: var(--hotel-blue);
+            border-bottom: 1px solid var(--hotel-gold);
+            padding-bottom: 4px;
+            margin-bottom: 6px;
+        }
+
+        .card-editorial .section-header {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.52rem;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--hotel-gold);
+            margin: 6px 0 3px;
+        }
+
+        .card-editorial .dish-line {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin: 1.5px 0;
+        }
+
+        .card-editorial .dish-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.62rem;
+            font-weight: 600;
+            color: var(--hotel-blue);
+        }
+
+        .card-editorial .dish-dot {
+            flex-grow: 1;
+            height: 1px;
+            border-bottom: 1px dotted #c0c8d4;
+            margin: 0 4px;
+            align-self: center;
+        }
+
+        .card-editorial .dish-sub {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.48rem;
+            color: #9ca3af;
+            font-weight: 300;
+            display: block;
+            margin-bottom: 1px;
+        }
+
+        .card-editorial .bottom-bar {
+            background: var(--hotel-gold);
+            padding: 4px 14px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.4rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--hotel-blue);
+            font-weight: 700;
+            text-align: center;
+        }
+
+        /* ================================================
+           STILE D — ILLUSTRATO (Con immagine di sfondo)
+           ================================================ */
+        .card-illustrated {
+            padding: 10px;
+            position: relative;
+            background: var(--hotel-white);
+        }
+
+        .card-illustrated .bg-art {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 55%;
+            height: 45%;
+            background-image: url('immagini/kids_menu_bg.png');
+            background-size: cover;
+            background-position: center top;
+            opacity: 0.12;
+            pointer-events: none;
+        }
+
+        .card-illustrated .inner-wrap {
+            border: 1px solid var(--hotel-blue);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px 12px 8px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .card-illustrated .inner-wrap::after {
+            content: '';
+            position: absolute;
+            inset: 3px;
+            border: 0.5px dotted var(--hotel-gold);
+            pointer-events: none;
+        }
+
+        .card-illustrated .logo-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .card-illustrated .logo-row svg {
+            height: 28px;
+        }
+
+        .card-illustrated .logo-row .name-block {
+            text-align: left;
+        }
+
+        .card-illustrated .logo-row .name-block strong {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.6rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--hotel-blue);
+            display: block;
+        }
+
+        .card-illustrated .logo-row .name-block span {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.38rem;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            color: var(--hotel-gold);
+        }
+
+        .card-illustrated .title-block {
+            text-align: center;
+            margin: 5px 0 3px;
+        }
+
+        .card-illustrated .title-block .menu-title-main {
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.5rem;
+            color: var(--hotel-blue);
+            line-height: 1.1;
+        }
+
+        .card-illustrated .title-block .menu-subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.52rem;
+            font-style: italic;
+            color: var(--hotel-gold);
+            letter-spacing: 0.1em;
+        }
+
+        .card-illustrated .gold-rule {
+            width: 40px;
+            height: 0.5px;
+            background: var(--hotel-gold);
+            margin: 4px auto 5px;
+        }
+
+        .card-illustrated .section-header {
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.0rem;
+            color: var(--hotel-blue);
+            text-align: center;
+            margin: 4px 0 2px;
+        }
+
+        .card-illustrated .dish-group {
+            width: 100%;
+            text-align: center;
+            margin: 1.5px 0;
+        }
+
+        .card-illustrated .dish-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.62rem;
+            font-weight: 600;
+            color: var(--hotel-blue);
+        }
+
+        .card-illustrated .dish-char {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.48rem;
+            font-style: italic;
+            color: var(--hotel-gold);
+        }
+
+        .card-illustrated .dish-sub {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.50rem;
+            color: #9ca3af;
+            line-height: 1.2;
+        }
+
+        .card-illustrated .footer-rule {
+            margin-top: auto;
+            padding-top: 5px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.38rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--hotel-gold);
+            text-align: center;
+        }
+
+        /* ========== STAMPA ========== */
+        @media print {
+            @page { size: A4 portrait; margin: 0; }
+            body { background: #fff !important; display: block; overflow: visible; }
+            .sidebar { display: none !important; }
+            .preview-area { padding: 0 !important; background: none !important; display: block !important; overflow: visible !important; }
+            .preview-header { display: none !important; }
+            .a4-page {
+                margin: 0 !important;
+                box-shadow: none !important;
+                background-color: #ffffff !important;
+                width: 210mm !important;
+                height: 297mm !important;
+                max-width: 210mm !important;
+                max-height: 297mm !important;
+                page-break-after: always !important;
+                page-break-inside: avoid !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            .menu-card { border: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ======== SIDEBAR ======== -->
+<div class="sidebar">
+    <div class="logo-ui">
+        <svg viewBox="0 0 100 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="6" y="6" width="88" height="148" rx="44" stroke="currentColor" stroke-width="6"/>
+            <line x1="50" y1="32" x2="50" y2="114" stroke="currentColor" stroke-width="6" stroke-linecap="round"/>
+            <polygon points="50,16 58,36 50,32 42,36" fill="currentColor"/>
+            <circle cx="50" cy="122" r="7" fill="currentColor"/>
+            <line x1="36" y1="58" x2="36" y2="100" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+            <polygon points="36,46 41,58 36,55 31,58" fill="currentColor"/>
+            <line x1="33" y1="100" x2="39" y2="100" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+            <line x1="64" y1="58" x2="64" y2="100" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+            <polygon points="64,46 69,58 64,55 59,58" fill="currentColor"/>
+            <line x1="61" y1="100" x2="67" y2="100" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+            <line x1="36" y1="84" x2="64" y2="72" stroke="currentColor" stroke-width="5" stroke-linecap="round"/>
+        </svg>
+        <h1>IL TRIDENTE <span>Menu Bimbi Generator</span></h1>
+    </div>
+
+    <button class="btn-print" onclick="window.print()">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+        </svg>
+        Stampa Menu Bimbi (A4)
+    </button>
+
+    <div class="control-group">
+        <div class="section-title">Istruzioni Stampa</div>
+        <div class="instructions">
+            — Formato: <strong>A4 Portrait</strong><br>
+            — Margini: <strong>Nessuno (0)</strong><br>
+            — Scala: <strong>100%</strong><br>
+            — Abilita: <strong>Grafica di sfondo</strong>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <div class="section-title">4 Stili inclusi</div>
+        <div class="style-legend">
+            <div class="style-pill">
+                <div class="dot" style="background:#1f3b8b"></div>
+                <span><strong>A — Classic</strong> · fedele all'originale menu hotel</span>
+            </div>
+            <div class="style-pill">
+                <div class="dot" style="background:#c89f6d"></div>
+                <span><strong>B — Playful</strong> · cornice oro, emoji, palette vivace</span>
+            </div>
+            <div class="style-pill">
+                <div class="dot" style="background:#0d1f4a"></div>
+                <span><strong>C — Editorial</strong> · header blu, layout moderno</span>
+            </div>
+            <div class="style-pill">
+                <div class="dot" style="background:#6b7280"></div>
+                <span><strong>D — Illustrato</strong> · con artwork bimbi in filigrana</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="control-group">
+        <div class="section-title">Contenuto</div>
+        <div class="instructions">
+            Il menu bimbi riporta i piatti originali con nome del personaggio, nome del piatto in italiano e traduzione in tedesco.
+        </div>
+    </div>
+</div>
+<!-- ======== PREVIEW ======== -->
+<div class="preview-area">
+    <div class="preview-header">
+        <h2>Menu Bimbi — 4 Stili su Foglio A4</h2>
+        <p>Stampa e taglia lungo la linea tratteggiata &middot; Il Tridente Hotel, Bibione</p>
+    </div>
+
+    <div class="a4-page">
+
+        <!-- ================================
+             CARD A — CLASSIC
+             ================================ -->
+        <div class="menu-card card-classic">
+            <div class="inner-wrap">
+                <div class="inner-frame"></div>
+
+                <!-- LOGO CENTRALE -->
+                <div class="header-logo-container">
+                    <!-- Logo Centrale (Ovale interamente dorato) -->
+                    <div class="logo-block">
+                        <svg class="hotel-logo" viewBox="0 0 100 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="6" y="6" width="88" height="148" rx="44" stroke="#c89f6d" stroke-width="4" class="lo"/>
+                            <rect x="12" y="12" width="76" height="136" rx="38" stroke="#c89f6d" stroke-width="1.2" class="li"/>
+                            <line x1="50" y1="32" x2="50" y2="114" stroke="#c89f6d" stroke-width="3.5" stroke-linecap="round" class="lr"/>
+                            <polygon points="50,16 54.5,32 50,28.5 45.5,32" fill="#c89f6d" class="lf"/>
+                            <circle cx="50" cy="122" r="3.8" fill="#c89f6d" class="lf"/>
+                            <line x1="36" y1="58" x2="36" y2="100" stroke="#c89f6d" stroke-width="2.8" stroke-linecap="round" class="lr"/>
+                            <polygon points="36,46 40.5,58 36,55 31.5,58" fill="#c89f6d" class="lf"/>
+                            <line x1="33" y1="100" x2="39" y2="100" stroke="#c89f6d" stroke-width="2" stroke-linecap="round" class="lr"/>
+                            <line x1="64" y1="58" x2="64" y2="100" stroke="#c89f6d" stroke-width="2.8" stroke-linecap="round" class="lr"/>
+                            <polygon points="64,46 68.5,58 64,55 59.5,58" fill="#c89f6d" class="lf"/>
+                            <line x1="61" y1="100" x2="67" y2="100" stroke="#c89f6d" stroke-width="2" stroke-linecap="round" class="lr"/>
+                            <line x1="36" y1="84" x2="64" y2="72" stroke="#c89f6d" stroke-width="2.8" stroke-linecap="round" class="lr"/>
+                        </svg>
+                        <div class="hotel-label-tridente">Il Tridente</div>
+                        <div class="hotel-label-hotel">Hotel</div>
+                    </div>
+                </div>
+
+                <div class="menu-title-main">Menu Bimbi</div>
+                <div class="menu-subtitle">Kindermenü</div>
+                <div class="gold-rule"></div>
+
+                <div class="section-header">Primi piatti</div>
+
+                <div class="dish-name">Biancaneve</div>
+                <div class="dish-sub">Pennette in bianco al burro o all'olio &nbsp;/&nbsp; <span class="de">ohne Soße (mit Butter/Öl)</span></div>
+
+                <div class="dish-name">Cenerentola</div>
+                <div class="dish-sub">Pennette al pomodoro fresco e basilico &nbsp;/&nbsp; <span class="de">mit Tomatensoße und Basilikum</span></div>
+
+                <div class="dish-name">Elefante</div>
+                <div class="dish-sub">Pennette al ragù bolognese casereccio &nbsp;/&nbsp; <span class="de">mit Fleischsoße (Bolognese)</span></div>
+
+                <div class="dish-name">Shrek</div>
+                <div class="dish-sub">Pennette al pesto leggero alla genovese &nbsp;/&nbsp; <span class="de">mit Pesto Genovese</span></div>
+
+                <div class="dish-name">Sirenetta</div>
+                <div class="dish-sub">Tortellini panna e prosciutto cotto &nbsp;/&nbsp; <span class="de">mit Sahne und Schinken</span></div>
+
+                <div class="gold-rule"></div>
+                <div class="section-header">Secondi piatti</div>
+
+                <div class="dish-name">Crocky</div>
+                <div class="dish-sub">Würstel alla griglia e patatine fritte &nbsp;/&nbsp; <span class="de">Gegrilltes Würstchen mit Pommes</span></div>
+
+                <div class="dish-name">Uga</div>
+                <div class="dish-sub">Cotoletta di pollo croccante e patatine fritte &nbsp;/&nbsp; <span class="de">Hühnerschnitzel mit Pommes</span></div>
+
+                <div class="dish-name">Bibi</div>
+                <div class="dish-sub">Petto di pollo alla griglia con spinaci al burro &nbsp;/&nbsp; <span class="de">Hähnchenbrust mit Spinat in Butter</span></div>
+
+                <div class="dish-name">Jonny</div>
+                <div class="dish-sub">Nuggets di pollo sfiziosi con patatine &nbsp;/&nbsp; <span class="de">Hähnchen-Nuggets mit Pommes</span></div>
+
+                <div class="dish-name">Nemo</div>
+                <div class="dish-sub">Filetto di pesce panato con patatine fritte &nbsp;/&nbsp; <span class="de">Paniertes Fischfilet mit Pommes</span></div>
+
+                <div class="footer-rule">Il Tridente Hotel &middot; Bibione</div>
+            </div>
+        </div>
+
+        <!-- ================================
+             CARD B — PLAYFUL
+             ================================ -->
+        <div class="menu-card card-playful">
+            <div class="inner-wrap">
+                <span class="corner-star tl">✦</span>
+                <span class="corner-star tr">✦</span>
+                <span class="corner-star bl">✦</span>
+                <span class="corner-star br">✦</span>
+
+                <div class="logo-badge">
+                    <svg viewBox="0 0 100 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="6" y="6" width="88" height="148" rx="44" stroke="#1f3b8b" stroke-width="4"/>
+                        <rect x="12" y="12" width="76" height="136" rx="38" stroke="#c89f6d" stroke-width="1.2"/>
+                        <line x1="50" y1="32" x2="50" y2="114" stroke="#1f3b8b" stroke-width="3.5" stroke-linecap="round"/>
+                        <polygon points="50,16 54.5,32 50,28.5 45.5,32" fill="#1f3b8b"/>
+                        <circle cx="50" cy="122" r="3.8" fill="#1f3b8b"/>
+                        <line x1="36" y1="58" x2="36" y2="100" stroke="#1f3b8b" stroke-width="2.8" stroke-linecap="round"/>
+                        <polygon points="36,46 40.5,58 36,55 31.5,58" fill="#1f3b8b"/>
+                        <line x1="33" y1="100" x2="39" y2="100" stroke="#1f3b8b" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="64" y1="58" x2="64" y2="100" stroke="#1f3b8b" stroke-width="2.8" stroke-linecap="round"/>
+                        <polygon points="64,46 68.5,58 64,55 59.5,58" fill="#1f3b8b"/>
+                        <line x1="61" y1="100" x2="67" y2="100" stroke="#1f3b8b" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="36" y1="84" x2="64" y2="72" stroke="#1f3b8b" stroke-width="2.8" stroke-linecap="round"/>
+                    </svg>
+                    <div class="badge-name">Il Tridente Hotel</div>
+                </div>
+
+                <div class="menu-title-main">Menu Bimbi</div>
+                <div class="emoji-row">🍝 🍗 🐟 🥔</div>
+
+                <div class="section-header">Primi Piatti</div>
+
+                <div class="dish-row"><span class="dish-icon">✦</span><div><div class="dish-name">Biancaneve — Pennette in bianco</div><div class="dish-sub">Mit Butter oder Öl / ohne Soße</div></div></div>
+                <div class="dish-row"><span class="dish-icon">✦</span><div><div class="dish-name">Cenerentola — Pennette al pomodoro</div><div class="dish-sub">Mit Tomatensoße und Basilikum</div></div></div>
+                <div class="dish-row"><span class="dish-icon">✦</span><div><div class="dish-name">Elefante — Pennette al ragù</div><div class="dish-sub">Mit Rinderhackfleischsoße (Bolognese)</div></div></div>
+                <div class="dish-row"><span class="dish-icon">✦</span><div><div class="dish-name">Shrek — Pennette al pesto</div><div class="dish-sub">Mit Pesto Genovese</div></div></div>
+                <div class="dish-row"><span class="dish-icon">✦</span><div><div class="dish-name">Sirenetta — Tortellini panna e prosciutto</div><div class="dish-sub">Mit Sahne und gekochtem Schinken</div></div></div>
+
+                <div class="section-header" style="margin-top:4px;">Secondi Piatti</div>
+
+                <div class="dish-row"><span class="dish-icon">★</span><div><div class="dish-name">Crocky — Würstel alla griglia e patatine</div><div class="dish-sub">Gegrilltes Würstchen mit Pommes</div></div></div>
+                <div class="dish-row"><span class="dish-icon">★</span><div><div class="dish-name">Uga — Cotoletta di pollo e patatine</div><div class="dish-sub">Knuspriges Hühnerschnitzel mit Pommes</div></div></div>
+                <div class="dish-row"><span class="dish-icon">★</span><div><div class="dish-name">Bibi — Petto di pollo con spinaci</div><div class="dish-sub">Gegrillte Hähnchenbrust mit Spinat in Butter</div></div></div>
+                <div class="dish-row"><span class="dish-icon">★</span><div><div class="dish-name">Jonny — Nuggets di pollo e patatine</div><div class="dish-sub">Hähnchen-Nuggets mit Pommes</div></div></div>
+                <div class="dish-row"><span class="dish-icon">★</span><div><div class="dish-name">Nemo — Pesce panato e patatine</div><div class="dish-sub">Paniertes Fischfilet mit Pommes</div></div></div>
+
+                <div class="footer-rule">Il Tridente Hotel &middot; Bibione</div>
+            </div>
+        </div>
+
+        <!-- ================================
+             CARD C — EDITORIAL
+             ================================ -->
+        <div class="menu-card card-editorial">
+            <div class="top-bar">
+                <div class="hotel-info">
+                    <strong>Il Tridente</strong>
+                    <span>Hotel &middot; Bibione</span>
+                </div>
+                <svg viewBox="0 0 100 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="6" y="6" width="88" height="148" rx="44" stroke="white" stroke-width="4"/>
+                    <rect x="12" y="12" width="76" height="136" rx="38" stroke="#c89f6d" stroke-width="1.2"/>
+                    <line x1="50" y1="32" x2="50" y2="114" stroke="white" stroke-width="3.5" stroke-linecap="round"/>
+                    <polygon points="50,16 54.5,32 50,28.5 45.5,32" fill="white"/>
+                    <circle cx="50" cy="122" r="3.8" fill="white"/>
+                    <line x1="36" y1="58" x2="36" y2="100" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
+                    <polygon points="36,46 40.5,58 36,55 31.5,58" fill="white"/>
+                    <line x1="33" y1="100" x2="39" y2="100" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="64" y1="58" x2="64" y2="100" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
+                    <polygon points="64,46 68.5,58 64,55 59.5,58" fill="white"/>
+                    <line x1="61" y1="100" x2="67" y2="100" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                    <line x1="36" y1="84" x2="64" y2="72" stroke="white" stroke-width="2.8" stroke-linecap="round"/>
+                </svg>
+            </div>
+
+            <div class="ed-content">
+                <div class="menu-title-main">Menu Bimbi</div>
+
+                <div class="section-header">— Primi Piatti —</div>
+
+                <div class="dish-line"><span class="dish-name">Biancaneve · Pennette in bianco</span></div>
+                <span class="dish-sub">Al burro o all'olio / ohne Soße (mit Butter/Öl)</span>
+                <div class="dish-line"><span class="dish-name">Cenerentola · Pennette al pomodoro</span></div>
+                <span class="dish-sub">Pomodoro fresco e basilico / mit Tomatensoße und Basilikum</span>
+                <div class="dish-line"><span class="dish-name">Elefante · Pennette al ragù</span></div>
+                <span class="dish-sub">Ragù bolognese casereccio / mit Fleischsoße (Bolognese)</span>
+                <div class="dish-line"><span class="dish-name">Shrek · Pennette al pesto</span></div>
+                <span class="dish-sub">Pesto leggero alla genovese / mit Pesto Genovese</span>
+                <div class="dish-line"><span class="dish-name">Sirenetta · Tortellini panna e prosciutto</span></div>
+                <span class="dish-sub">Tortellini panna e prosciutto cotto / mit Sahne und Schinken</span>
+
+                <div class="section-header" style="margin-top:6px;">— Secondi Piatti —</div>
+
+                <div class="dish-line"><span class="dish-name">Crocky · Würstel alla griglia e patatine</span></div>
+                <span class="dish-sub">Würstel alla griglia con patatine / gegrillte Würstel mit Pommes</span>
+                <div class="dish-line"><span class="dish-name">Uga · Cotoletta di pollo e patatine</span></div>
+                <span class="dish-sub">Cotoletta croccante con patatine / Hühnerschnitzel mit Pommes</span>
+                <div class="dish-line"><span class="dish-name">Bibi · Petto di pollo con spinaci</span></div>
+                <span class="dish-sub">Pollo alla griglia con spinaci al burro / Hähnchenbrust mit Spinat</span>
+                <div class="dish-line"><span class="dish-name">Jonny · Nuggets di pollo e patatine</span></div>
+                <span class="dish-sub">Nuggets di pollo sfiziosi con patatine / Nuggets mit Pommes</span>
+                <div class="dish-line"><span class="dish-name">Nemo · Pesce panato e patatine</span></div>
+                <span class="dish-sub">Filetto di pesce panato con patatine / Fischfilet mit Pommes</span>
+            </div>
+
+            <div class="bottom-bar">Il Tridente Hotel &middot; Bibione</div>
+        </div>
+
+        <!-- ================================
+             CARD D — ILLUSTRATO
+             ================================ -->
+        <div class="menu-card card-illustrated">
+            <div class="bg-art"></div>
+            <div class="inner-wrap">
+                <div class="inner-frame"></div>
+                <div class="logo-row">
+                    <svg viewBox="0 0 100 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="6" y="6" width="88" height="148" rx="44" stroke="#1f3b8b" stroke-width="4"/>
+                        <rect x="12" y="12" width="76" height="136" rx="38" stroke="#c89f6d" stroke-width="1.2"/>
+                        <line x1="50" y1="32" x2="50" y2="114" stroke="#1f3b8b" stroke-width="3.5" stroke-linecap="round"/>
+                        <polygon points="50,16 54.5,32 50,28.5 45.5,32" fill="#1f3b8b"/>
+                        <circle cx="50" cy="122" r="3.8" fill="#1f3b8b"/>
+                        <line x1="36" y1="58" x2="36" y2="100" stroke="#1f3b8b" stroke-width="2.8" stroke-linecap="round"/>
+                        <polygon points="36,46 40.5,58 36,55 31.5,58" fill="#1f3b8b"/>
+                        <line x1="33" y1="100" x2="39" y2="100" stroke="#1f3b8b" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="64" y1="58" x2="64" y2="100" stroke="#1f3b8b" stroke-width="2.8" stroke-linecap="round"/>
+                        <polygon points="64,46 68.5,58 64,55 59.5,58" fill="#1f3b8b"/>
+                        <line x1="61" y1="100" x2="67" y2="100" stroke="#1f3b8b" stroke-width="2" stroke-linecap="round"/>
+                        <line x1="36" y1="84" x2="64" y2="72" stroke="#1f3b8b" stroke-width="2.8" stroke-linecap="round"/>
+                    </svg>
+                    <div class="name-block">
+                        <strong>Il Tridente</strong>
+                        <span>Hotel &middot; Bibione</span>
+                    </div>
+                </div>
+
+                <div class="title-block">
+                    <div class="menu-title-main">Menu Bimbi</div>
+                    <div class="menu-subtitle">Pensato con amore per i nostri piccoli ospiti</div>
+                </div>
+                <div class="gold-rule"></div>
+
+                <div class="section-header">Primi piatti</div>
+
+                <div class="dish-group">
+                    <div class="dish-name">Biancaneve <span class="dish-char">· Pennette in bianco</span></div>
+                    <div class="dish-sub">Al burro o all'olio / ohne Soße (mit Butter/Öl)</div>
+                </div>
+                <div class="dish-group">
+                    <div class="dish-name">Cenerentola <span class="dish-char">· Pennette al pomodoro</span></div>
+                    <div class="dish-sub">Pomodoro fresco e basilico / mit Tomatensoße und Basilikum</div>
+                </div>
+                <div class="dish-group">
+                    <div class="dish-name">Elefante <span class="dish-char">· Pennette al ragù</span></div>
+                    <div class="dish-sub">Ragù bolognese casereccio / mit Fleischsoße (Bolognese)</div>
+                </div>
+                <div class="dish-group">
+                    <div class="dish-name">Shrek <span class="dish-char">· Pennette al pesto</span></div>
+                    <div class="dish-sub">Pesto leggero alla genovese / mit Pesto Genovese</div>
+                </div>
+                <div class="dish-group">
+                    <div class="dish-name">Sirenetta <span class="dish-char">· Tortellini panna e prosciutto</span></div>
+                    <div class="dish-sub">Panna e prosciutto cotto / mit Sahne und Schinken</div>
+                </div>
+
+                <div class="gold-rule"></div>
+                <div class="section-header">Secondi piatti</div>
+
+                <div class="dish-group">
+                    <div class="dish-name">Crocky <span class="dish-char">· Würstel e patatine</span></div>
+                    <div class="dish-sub">Würstel alla griglia con patatine / gegrillte Würstel mit Pommes</div>
+                </div>
+                <div class="dish-group">
+                    <div class="dish-name">Uga <span class="dish-char">· Cotoletta e patatine</span></div>
+                    <div class="dish-sub">Cotoletta croccante con patatine / Hühnerschnitzel mit Pommes</div>
+                </div>
+                <div class="dish-group">
+                    <div class="dish-name">Bibi <span class="dish-char">· Petto di pollo e spinaci</span></div>
+                    <div class="dish-sub">Pollo alla griglia con spinaci al burro / Hähnchenbrust con spinaci</div>
+                </div>
+                <div class="dish-group">
+                    <div class="dish-name">Jonny <span class="dish-char">· Nuggets e patatine</span></div>
+                    <div class="dish-sub">Nuggets di pollo sfiziosi con patatine / Nuggets mit Pommes</div>
+                </div>
+                <div class="dish-group">
+                    <div class="dish-name">Nemo <span class="dish-char">· Pesce panato e patatine</span></div>
+                    <div class="dish-sub">Filetto di pesce panato con patatine / Fischfilet mit Pommes</div>
+                </div>
+
+                <div class="footer-rule">Il Tridente Hotel &middot; Bibione</div>
+            </div>
+        </div>
+
+    </div><!-- /a4-page -->
+</div><!-- /preview-area -->
+
+</body>
+</html>
