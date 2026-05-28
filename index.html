@@ -1264,10 +1264,17 @@
         // Carica i dati dal file di testo o usa il backup
         function loadInitialData() {
             const textarea = document.getElementById('product-list');
-            
+
+            // Su file:// il fetch è bloccato da CORS — uso direttamente il backup
+            if (window.location.protocol === 'file:') {
+                textarea.value = defaultProducts.join('\n');
+                updateLabels();
+                return;
+            }
+
             fetch('Plain croissant.txt?t=' + new Date().getTime())
                 .then(response => {
-                    if (!response.ok) throw new Error('CORS or file missing');
+                    if (!response.ok) throw new Error('File missing');
                     return response.text();
                 })
                 .then(text => {
@@ -1275,8 +1282,7 @@
                     textarea.value = parsed.join('\n');
                     updateLabels();
                 })
-                .catch(err => {
-                    console.log('Using default backup list due to fetch restriction or missing file.', err);
+                .catch(() => {
                     textarea.value = defaultProducts.join('\n');
                     updateLabels();
                 });
